@@ -83,9 +83,11 @@ namespace XLua
                 //Init Base Libs
                 LuaAPI.luaopen_xlua(rawL);
                 LuaAPI.luaopen_i64lib(rawL);
-
+            //创建lua C# 的转换器
                 translator = new ObjectTranslator(this, rawL);
+            //创建usedatade _gc函数到lua
                 translator.createFunctionMetatable(rawL);
+            //创建C#函数库到lua
                 translator.OpenLib(rawL);
                 ObjectTranslatorPool.Instance.Add(rawL, translator);
 
@@ -101,7 +103,8 @@ namespace XLua
 
                 //template engine lib register
                 TemplateEngine.LuaTemplate.OpenLib(rawL);
-
+                
+            //添加lua require的搜索目录
                 AddSearcher(StaticLuaCallbacks.LoadBuiltinLib, 2); // just after the preload searcher
                 AddSearcher(StaticLuaCallbacks.LoadFromCustomLoaders, 3);
 #if !XLUA_GENERAL
