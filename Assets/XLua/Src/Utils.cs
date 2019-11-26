@@ -1257,7 +1257,14 @@ namespace XLua
 		public const int CLS_GETTER_IDX = -2;
 		public const int CLS_SETTER_IDX = -1;
 
-		public static void EndClassRegister(Type type, RealStatePtr L, ObjectTranslator translator)
+
+
+        /*
+         * 一个C#类对应到lua的表里的metatable _index=cls_newindexer闭包([1]:setters, [2]:base, [3]:indexfuncs, [4]:baseindex)
+         * metatable _index=__newindex闭包([1]:setters, [2]:base, [3]:indexfuncs, [4]:baseindex)
+         * 全部绑定在C中的upvalue里
+         */
+        public static void EndClassRegister(Type type, RealStatePtr L, ObjectTranslator translator)
 		{
 			int top = LuaAPI.lua_gettop(L);
 			int cls_idx = abs_idx(top, CLS_IDX);
@@ -1280,7 +1287,6 @@ namespace XLua
 			LuaAPI.lua_pushvalue(L, -3);
 			LuaAPI.lua_rawset(L, -3);
 			LuaAPI.lua_pop(L, 1);
-
 			LuaAPI.lua_rawset(L, cls_meta_idx);
 			//end cls index
 
